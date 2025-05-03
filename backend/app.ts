@@ -1,9 +1,10 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/userRoutes';
 import adminRoutes from './routes/adminRoutes';
+import { connectDB } from './config/db';
+import path from 'path';
 
 dotenv.config();
 
@@ -26,22 +27,12 @@ app.get('/',(req,res)=>{
 }
 )
 
-app.get('/env-test', (req, res) => {
-  res.send(`JWT_SECRET is: ${process.env.JWT_SECRET}`);
-});
-
 
 app.use('/api', authRoutes);
 app.use('/api/admin',adminRoutes)
 
-mongoose.connect(process.env.MONGO_URI || '')
-  .then(() => {
-    console.log('MongoDB connected');
-    app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
-  })
-  .catch(err => console.log(err)); 
+connectDB()
 
-  app.listen(PORT,()=>{
-    console.log(`Server is running on http://localhost:${PORT}`);
-    
-  })
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

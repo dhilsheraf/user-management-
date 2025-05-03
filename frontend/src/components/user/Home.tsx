@@ -1,13 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/authSlice";
-import { RootState } from "../../redux/store";
+import { useEffect } from "react";
 
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const user = useSelector((state: RootState) => state.user.user);
+  // Access the user data from Redux state
+  const user = useSelector((state: any) => state.user.user);
+
+  // This will run every time the user state changes
+  useEffect(() => {
+    if (!user) {
+      // If no user is logged in, navigate to login page
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
   const handleProfile = () => {
     navigate("/profile");
@@ -29,7 +38,7 @@ const Home = () => {
 
       <div className="text-center mb-8">
         <h1 className="text-amber-900 text-4xl font-bold mb-4 mt-4">
-          Hello welcome to the {user?.name || "user"} management
+          Hello, {user?.name || "User"}
         </h1>
       </div>
 

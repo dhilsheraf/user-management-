@@ -41,11 +41,55 @@ export const login = asyncHandler(async (req: Request, res: Response): Promise<v
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    res.status(400).json({ message: 'Invalid credentials' });
+    res.status(400).json({ message: 'Invalid password' });
     return;
   }
 
-  const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '12h' });
+  res.json({
+    token,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      profileImage: user.profileImage,
+    },
+  });
+});
 
-  res.json({ token, user });
+
+
+export const uploadProfileImage = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  const userId = req.params.id;
+
+  if (!userId) {
+     res.status(400).json({ message: "User ID is required" });
+     return
+  }
+
+  const file = req.file as Express.Multer.File;
+  if (!file) {
+    res.status(400).json({ message: "No file uploaded" });
+    return;
+  }
+
+  const profileImageUrl = file.path
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profileImage: profileImageUrl },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+       res.status(404).json({ message: "User not found" });
+       return
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error("Error updating profile image:", err);
+    res.status(500).json({ message: "Error uploading image", error: err });
+  }
 });
