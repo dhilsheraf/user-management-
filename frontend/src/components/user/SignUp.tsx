@@ -36,7 +36,7 @@ const Signup = () => {
       return;
     }
   
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     if (!emailRegex.test(form.email)) {
       toast.error("Please enter a valid email address");
       return;
@@ -87,7 +87,7 @@ const Signup = () => {
             value={form.fullName}
             onChange={handleChange}
             className="w-full p-2 border rounded"
-            required
+            
           />
           <input
             type="email"
@@ -96,7 +96,7 @@ const Signup = () => {
             value={form.email}
             onChange={handleChange}
             className="w-full p-2 border rounded"
-            required
+            
           />
           <input
             type="password"
@@ -105,7 +105,6 @@ const Signup = () => {
             value={form.password}
             onChange={handleChange}
             className="w-full p-2 border rounded"
-            required
           />
           <input
             type="password"
@@ -114,7 +113,6 @@ const Signup = () => {
             value={form.confirmPassword}
             onChange={handleChange}
             className="w-full p-2 border rounded"
-            required
           />
           <button
             type="submit"

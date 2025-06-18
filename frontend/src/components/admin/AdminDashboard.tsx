@@ -26,19 +26,16 @@ export default function AdminDashboard() {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:8080/api/admin/all-user');
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
-        const data = await response.json();
-        setUsers(data);
+        const response = await axios.get('/all-user'); // Uses the axios instance
+        console.log(response)
+        setUsers(response.data);
         setLoading(false);
-      } catch (err) {
+      } catch (err:any) {
         setError(err.message);
         setLoading(false);
       }
     };
-
+  
     fetchUsers();
   }, []);
 
@@ -370,7 +367,7 @@ export default function AdminDashboard() {
               </button>
             </div>
             <div className="mb-6">
-              <p className="text-gray-700">Are you sure you want to delete the user <strong>{selectedUser.name}</strong>? This action cannot be undone.</p>
+              <p className="text-gray-700">Are you sure you want to delete the user <strong>{selectedUser.name}</strong> ? This action cannot be undone.</p>
             </div>
             <div className="flex justify-end space-x-3">
               <button

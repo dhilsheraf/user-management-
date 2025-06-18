@@ -3,7 +3,7 @@ import { createUser, deleteUser, editUser, getAllUsers, login, verifyToken } fro
 
 const router = express.Router()
 
-router.get('/all-user',getAllUsers)
+router.get('/all-user',verifyToken,getAllUsers)
 router.post('/admin-login',login)
 router.post('/create-user',verifyToken, createUser);
 router.put('/edit-user/:id',verifyToken, editUser);
